@@ -11,10 +11,13 @@
     "url": "git+https://github.com/Simran-Tamrakar7/Cypress-Learning.git"
   },
   "license": "ISC",
-  "author": "",
+  "author": "Simran",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "cypress": "^14.5.3"
   }
 }
