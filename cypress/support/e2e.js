@@ -15,3 +15,6 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+
+// Add this line to enable file upload
+import 'cypress-file-upload'

@@ -1,0 +1,103 @@
+describe('Treasury Deal Creation and Verification - Forex', () => {
+  const baseUrl = 'https://bk-fk.info.com.np/';
+  const creatorEmail = 'Dealcreator01@no.com';
+  const verifierEmail = 'Dealverifier01@no.com';
+  const password = 'Test@12345';
+
+  // Login helper with dashboard verification
+  function login(email) {
+    cy.visit(baseUrl);
+    cy.get('#username').clear().type(email);
+    cy.get('#password').clear().type(password);
+    cy.get('button[type="submit"]').click();
+    cy.url().should('include', '/dashboard');
+    cy.contains('Treasury Deal Creation', { timeout: 10000 }).should('be.visible');
+  }
+
+  // Logout helper
+  function logout() {
+    cy.get('.logout-button').click();
+    cy.url().should('include', '/login');
+  }
+
+  // Improved helper to select Ant Design dropdown options:
+  // Click the dropdown arrow to open menu, then type and select option
+  function selectAntDOption(inputId, optionText) {
+    // Click the dropdown arrow button instead of the input to avoid "element covered" issue
+    cy.get(`#${inputId}`)
+      .parent()               // parent div wrapping input and arrow
+      .find('.ant-select-arrow')
+      .click();
+
+    // Type to filter options
+    cy.get(`#${inputId}`).clear().type(optionText);
+
+    // Click option from dropdown menu
+    cy.get('.ant-select-dropdown').contains(optionText).click();
+  }
+
+  it('Create Forex deal as Dealcreator01 and verify as Dealverifier01', () => {
+    // Step 1: Login as creator
+    login(creatorEmail);
+
+    // Navigate to Treasury Deal Creation > Forex
+    cy.contains('Treasury Deal Creation').click();
+    cy.contains('Forex').click();
+
+    // Select transaction type dropdown (fixed)
+    selectAntDOption('transactionType', 'Buy');
+
+    // Select buying currency dropdown
+    selectAntDOption('currencyBoughtId', 'USD');
+
+    // Select selling currency dropdown (adjust ID if different)
+    selectAntDOption('sellingCurrencyId', 'NPR');
+
+    // Select counter party dropdown
+    selectAntDOption('counterPartyId', '123');
+
+    // Select counter party dealer dropdown
+    selectAntDOption('counterPartyDealerId', '123');
+
+    // Fill out other fields
+    cy.get('#amount').should('be.visible').type('10000');
+    cy.get('#rate').should('be.visible').type('136.50');
+    cy.get('#dealDate').should('be.visible').type('2025-08-13');
+
+    // Select broker dropdown
+    selectAntDOption('brokerId', 'eee(eee)');
+
+    // Select other dropdowns
+    selectAntDOption('someOtherSelectId', '123(Not Available)');
+    selectAntDOption('anotherSelectId', '123(123)');
+
+    // Remarks textarea
+    cy.get('#remarks').should('be.visible').type('Test deal creation automation');
+
+    // Submit the form
+    cy.get('button[type="submit"]').should('be.enabled').click();
+
+    // Confirm success message
+    cy.contains('Deal created successfully', { timeout: 10000 }).should('be.visible');
+
+    // Logout creator
+    logout();
+
+    // Step 2: Login as verifier
+    login(verifierEmail);
+
+    // Navigate to Deal Verification > Forex
+    cy.contains('Deal Verification').click();
+    cy.contains('Forex').click();
+
+    // Verify deal is listed
+    cy.contains('USD').should('be.visible');
+    cy.contains('10000').should('be.visible');
+
+    // Approve the deal
+    cy.get('.approve-button').should('be.visible').click();
+
+    // Confirm verification success message
+    cy.contains('Deal verified successfully', { timeout: 10000 }).should('be.visible');
+  });
+});

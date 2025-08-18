@@ -1,0 +1,35 @@
+describe("verifier", () => {
+  it("tests verifier", () => {
+    cy.viewport(412, 747);
+    cy.visit("https://bk-fk.info.com.np/form/forex");
+    cy.get("#currencyBoughtId").click();
+    cy.type("{enter}");
+    cy.type("{enter}");
+    cy.type("{enter}");
+    cy.type("{enter}");
+    cy.type("{enter}");
+    cy.type("{enter}");
+    cy.type("{enter}");
+    cy.type("{enter}");
+    cy.type("{enter}");
+    cy.get("#amountBought").click();
+    cy.get("#amountBought").type("1,0000");
+    cy.type("{enter}");
+    cy.get("#valueDate").click();
+    cy.get("div:nth-of-type(6) a").click();
+    cy.get("#ourReceiveBankAccountId").click();
+    cy.type("{enter}");
+    cy.type("{enter}");
+    cy.type("{enter}");
+    cy.type("{enter}");
+    cy.type("{enter}");
+    cy.get("#dealChat").click();
+    cy.get("#dealChat").type("qwqwqwqw");
+    cy.get("s").click();
+    cy.get("div:nth-of-type(10) div.ant-select-item-option-active > div").click();
+    cy.get("main").click();
+    cy.get("#remarks").click();
+    cy.get("#remarks").type("qqqqwww");
+    cy.get("div:nth-of-type(19) span").click();
+  });
+});
